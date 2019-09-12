@@ -22,10 +22,19 @@ class Contacts(db.Model):
         self.last_name = last_name
 
 
+class Email(Contacts):
+    email = db.Column(db.String(100), nullable=False, unique=True)
+    email_two = db.Column(db.String(100), nullable=True)
+    email_three = db.Column(db.String(100), nullable=True)
+
+
 class ContactsSchema(ma.Schema):
     id = fields.Integer()
-    username = fields.String(required=True)
+    username = fields.String(required=False)
     first_name = fields.String(required=False)
     last_name = fields.String(required=False)
     creation_date = fields.DateTime()
+    email = fields.String(required=False)
+    email_two = fields.String(required=False)
+    email_three = fields.String(required=False)
 

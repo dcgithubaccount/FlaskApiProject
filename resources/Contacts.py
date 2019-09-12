@@ -16,6 +16,7 @@ def data_and_error(json_data):
 
 
 class ContactResource(Resource):
+    #TODO Change in get to with email as input.
     def get(self):
         if not request.data:
             contacts = Contacts.query.all()
@@ -23,12 +24,13 @@ class ContactResource(Resource):
             return {'status': 'success', 'data': contacts}, 200
         else:
             json_data = request.get_json(force=True)
-            print(json_data)
+            # print(json_data)
             data, errors = data_and_error(json_data=json_data)
             contact = Contacts.query.filter_by(username=data['username']).first()
             contact = contact_schema.dump(contact)
             return {'status': 'success', 'data': contact}, 200
 
+    #TODO Change in post to include email. No change in PUT OR DELETE.
     def post(self):
         json_data = request.get_json(force=True)
         # print(json_data)
