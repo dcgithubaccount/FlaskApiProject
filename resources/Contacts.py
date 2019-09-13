@@ -72,8 +72,8 @@ class ContactResource(Resource):
         if errors:
             return errors, 422
         contact = Contacts.query.filter_by(id=data['id']).first()
-        print(contact.email_two)
-        print(contact.email_three)
+        # print(contact.email_two)
+        # print(contact.email_three)
         if not contact:
             return {'message': 'Contact does not exist'}, 400
         contact.username = data.get('username', contact.username)
