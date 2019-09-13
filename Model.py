@@ -15,17 +15,17 @@ class Contacts(db.Model):
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     creation_date = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
-
-    def __init__(self, username, first_name, last_name):
-        self.username = username
-        self.first_name = first_name
-        self.last_name = last_name
-
-
-class Email(Contacts):
     email = db.Column(db.String(100), nullable=False, unique=True)
     email_two = db.Column(db.String(100), nullable=True)
     email_three = db.Column(db.String(100), nullable=True)
+
+    def __init__(self, username, first_name, last_name, email, email_two=None, email_three=None):
+        self.username = username
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.email_two = email_two
+        self.email_three = email_three
 
 
 class ContactsSchema(ma.Schema):

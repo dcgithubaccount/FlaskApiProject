@@ -16,7 +16,6 @@ def data_and_error(json_data):
 
 
 class ContactResource(Resource):
-    #TODO Change in get to with email as input.
     def get(self):
         if not request.data:
             contacts = Contacts.query.all()
@@ -26,18 +25,25 @@ class ContactResource(Resource):
             json_data = request.get_json(force=True)
             # print(json_data)
             data, errors = data_and_error(json_data=json_data)
-            contact = Contacts.query.filter_by(username=data['username']).first()
-            contact = contact_schema.dump(contact)
+            if data.get('username') is not None:
+                contact = Contacts.query.filter_by(username=data['username']).first()
+                contact = contact_schema.dump(contact)
+            elif data.get('email') is not None:
+                contact = Contacts.query.filter_by(email=data['email']).first()
+                contact = contact_schema.dump(contact)
+            else:
+                contact = Contacts.query.all()
+                contact = contacts_schema.dump(contact)
             return {'status': 'success', 'data': contact}, 200
 
-    #TODO Change in post to include email. No change in PUT OR DELETE.
     def post(self):
         json_data = request.get_json(force=True)
-        # print(json_data)
+        print(json_data)
         if not json_data:
             return {'message': 'No input data provided'}, 400
         # Validate and deserialize input
         data, errors = data_and_error(json_data=json_data)
+        print(data['email'])
         if errors:
             return errors, 422
         contact = Contacts.query.filter_by(username=data['username']).first()
@@ -46,8 +52,8 @@ class ContactResource(Resource):
         contact = Contacts(
             username=data['username'],
             first_name=data['first_name'],
-            last_name=data['last_name']
-
+            last_name=data['last_name'],
+            email=data['email']
         )
 
         db.session.add(contact)
@@ -66,11 +72,16 @@ class ContactResource(Resource):
         if errors:
             return errors, 422
         contact = Contacts.query.filter_by(id=data['id']).first()
+        print(contact.email_two)
+        print(contact.email_three)
         if not contact:
             return {'message': 'Contact does not exist'}, 400
-        contact.username = data['username']
-        contact.first_name = data['first_name']
-        contact.last_name = data['last_name']
+        contact.username = data.get('username', contact.username)
+        contact.first_name = data.get('first_name', contact.first_name)
+        contact.last_name = data.get('last_name', contact.last_name)
+        contact.email = data.get('email', contact.email)
+        contact.email_two = data.get('email_two', contact.email_two)
+        contact.email_three = data.get('email_three', contact.email_three)
         db.session.commit()
 
         result = contact_schema.dump(contact)
