@@ -23,7 +23,6 @@ def create_app(config_filename):
     app = Flask(__name__)
     app.config.from_object(config_filename)
     celery = make_celery(app)
-
     from app import api_bp
     app.register_blueprint(api_bp, url_prefix='/my_api')
 
