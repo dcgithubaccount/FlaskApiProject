@@ -7,7 +7,7 @@ end_point = os.path.join(url, 'my_api', 'Contacts')
 
 
 def test_index_page():
-    r = requests.get(url+'/')
+    r = requests.get(f'{url}/')
     assert r.status_code == 404
 
 
